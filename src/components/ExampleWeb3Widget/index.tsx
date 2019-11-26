@@ -1,6 +1,5 @@
 import React from "react";
-import { Web3Context } from "../Web3Context";
-import { Button } from "@material-ui/core";
+import { Web3Context } from "../../contexts/Web3Context";
 
 export class Web3EnabledWidget extends React.Component {
   constructor(props) {
@@ -23,26 +22,30 @@ class Widget extends React.Component {
     super(props);
 
     this.state = {
-      currentBlockNumber: 0
+      currentBlockNumber: 0,
+      privateKey: "0x01"
     };
 
     this.handleRefreshBlock.bind(this)
   }
 
-  async handleRefreshBlock() {
+  handleRefreshBlock = async () => {
     const blockNumber = await this.props.web3.eth.getBlockNumber();
     this.setState({ currentBlockNumber: blockNumber });
   }
 
-  componentDidMount() {
-    console.log("props", this.props)
+
+  handleCreateWallet = async () => {
+    const wallet = await this.props.web3.eth.accounts.wallet.add(this.state.privateKey)
   }
+
 
   render() {
     return (
       <>
         <p>{this.state.currentBlockNumber}</p>
-        <Button onClick={this.handleRefreshBlock}>Test</Button>
+        <button type="button" className="btn btn-primary" onClick={this.handleRefreshBlock}>Test</button>
+        <button type="button" className="btn btn-primary" onClick={this.handleCreateWallet}>Create Wallet</button>
       </>
     );
   }
